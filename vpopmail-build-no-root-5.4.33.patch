@@ -1,0 +1,92 @@
+--- vpopmail-5.4.33/Makefile.am	2011-02-28 10:00:45.000000000 -0700
++++ vpopmail-no-root-5.4.33/Makefile.am	2013-10-19 21:43:34.268997087 -0700
+@@ -13,7 +13,7 @@
+ 
+ CONFIG_CLEAN_FILES=vauth.c cdb/conf-cc cdb/conf-ld cdb/compile cdb/load
+ 
+-INSTALL_PROGRAM= ${INSTALL} -o @vpopuser@ -m 711 -g @vpopgroup@ $(AM_INSTALL_PROGRAM_FLAGS)
++INSTALL_PROGRAM= ${INSTALL} -m 711 $(AM_INSTALL_PROGRAM_FLAGS)
+ INSTALL_STRIP_PROGRAM=${INSTALL_PROGRAM} -s
+ 
+ MYSQLCONF=$(DESTDIR)@vpopmaildir@/etc/vpopmail.mysql
+@@ -135,13 +135,13 @@
+ install-exec-am:
+ 	for d in bin doc etc include lib ; do \
+ 	  if test ! -d $(DESTDIR)@vpopmaildir@/$$d; then \
+-	    $(INSTALL) -d -g @vpopgroup@ -m 0755 -o @vpopuser@ \
++	    $(INSTALL) -d -m 0755 \
+ 	      $(DESTDIR)@vpopmaildir@/$$d ; \
+ 	  fi ; \
+ 	done
+ 
+ install-data-local:
+-	$(INSTALL) -d -g @vpopgroup@ -m 0700 -o @vpopuser@ \
++	$(INSTALL) -d -m 0700 \
+ 	  $(DESTDIR)@vpopmaildir@/@domains_dir@
+ 
+ 	echo "-I@vpopmaildir@/include" > \
+@@ -150,12 +150,12 @@
+ 	 $(DESTDIR)@vpopmaildir@/etc/lib_deps
+ 
+ 	if test ! -r $(VUSAGECCONF); then \
+-		$(INSTALL) -o @vpopuser@ -m 0644 -g @vpopgroup@ \
++		$(INSTALL) -m 0644 \
+ 		vusagec.conf $(VUSAGECCONF); \
+ 	fi
+ 
+ 	if test ! -r $(VLIMITS); then \
+-	  $(INSTALL) -o @vpopuser@ -m 0644 -g @vpopgroup@ \
++	  $(INSTALL) -m 0644 \
+ 	    vlimits.default $(VLIMITS); \
+ 	fi
+ 
+@@ -179,42 +179,38 @@
+ 	    echo "#   If host is 'localhost', then sockets (Unix) or named pipes (Windows)" >> $(MYSQLCONF); \
+ 	    echo "#   will be used instead of TCP/IP to connect to the server."   >> $(MYSQLCONF); \
+ 	  fi ; \
+-	  chown @vpopuser@  $(MYSQLCONF) ; \
+-	  chgrp @vpopgroup@ $(MYSQLCONF) ; \
+ 	  chmod 0640        $(MYSQLCONF) ; \
+ 	fi
+ 
+-	$(INSTALL) -o root -m 0644 \
++	$(INSTALL) -m 0644 \
+ 	  libvpopmail.a $(DESTDIR)@vpopmaildir@/lib/libvpopmail.a
+ 
+-	$(INSTALL) -o root -m 0444 \
++	$(INSTALL) -m 0444 \
+ 	  config.h $(DESTDIR)@vpopmaildir@/include/vpopmail_config.h
+ 
+ 	for include in vpopmail.h config.h vauth.h vlimits.h storage.h client.h conf.h ippp.h ; do \
+-	    $(INSTALL) -o root -m 0444 $$include \
++	    $(INSTALL) -m 0444 $$include \
+ 		$(DESTDIR)@vpopmaildir@/include/ ; \
+ 	done
+ 
+ 	$(INSTALL) -d $(DESTDIR)@vpopmaildir@/doc/man_html
+ 	$(INSTALL) -d $(DESTDIR)@vpopmaildir@/doc/doc_html
+-	$(INSTALL) -o @vpopuser@ -m 0444 -g @vpopgroup@ \
++	$(INSTALL) -m 0444 \
+ 	  doc/man_html/*.* $(DESTDIR)@vpopmaildir@/doc/man_html/
+ 
+-	$(INSTALL) -o @vpopuser@ -m 0444 -g @vpopgroup@ \
++	$(INSTALL) -m 0444 \
+ 	  doc/doc_html/*.* $(DESTDIR)@vpopmaildir@/doc/doc_html/
+ 
+ fix-priv:
+ 	if test -r $(MYSQLCONF); then \
+-	  chown @vpopuser@  $(MYSQLCONF) ; \
+-	  chgrp @vpopgroup@ $(MYSQLCONF) ; \
+ 	  chmod 0640        $(MYSQLCONF) ; \
+ 	fi
+ 	@echo "If the recursive chown is taking a long time"
+ 	@echo "go ahead and break out of it by pressing control-C"
+ 	@echo "this is the last stage of the install and can be skipped" 
+ 	chmod 700 $(DESTDIR)@vpopmaildir@/@domains_dir@
+-	chown -R @vpopuser@  $(DESTDIR)@vpopmaildir@/@domains_dir@
+-	chgrp -R @vpopgroup@ $(DESTDIR)@vpopmaildir@/@domains_dir@
++#	chown -R @vpopuser@  $(DESTDIR)@vpopmaildir@/@domains_dir@
++#	chgrp -R @vpopgroup@ $(DESTDIR)@vpopmaildir@/@domains_dir@
+ 
+ dist-hook:
+ 	-rm $(distdir)/cdb/makefile
