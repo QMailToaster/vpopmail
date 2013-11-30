@@ -115,24 +115,25 @@ make
 #-------------------------------------------------------------------------------
 %install
 #-------------------------------------------------------------------------------
-rm -rf %{buildroot}
+%{__rm} -rf %{buildroot}
 make DESTDIR=%{buildroot} install-strip
 
 # Set defaults for vpopmail mysql
 #-------------------------------------------------------------------------------
-mv %{buildroot}%{vdir}/etc/vpopmail.mysql %{buildroot}%{vdir}/etc/vpopmail.mysql.dist
-install vpopmail.mysql %{buildroot}%{vdir}/etc/vpopmail.mysql
+%{__mv} %{buildroot}%{vdir}/etc/vpopmail.mysql \
+        %{buildroot}%{vdir}/etc/vpopmail.mysql.dist
+%{__install} -p %{_sourcedir}/vpopmail.mysql %{buildroot}%{vdir}/etc/.
 
 # Install domain quota messages
 #-------------------------------------------------------------------------------
 # install overquota.msg  %{buildroot}%{vdir}/domains
-install quotawarn.msg %{buildroot}%{vdir}/domains/.quotawarn.msg
+%{__install} quotawarn.msg %{buildroot}%{vdir}/domains/.quotawarn.msg
 
 # move devel files to their normal places for the -devel package
-mkdir -p %{buildroot}%{_sysconfdir}/%{name} \
-         %{buildroot}%{_includedir}/%{name} \
-         %{buildroot}%{_libdir}/%{name}
-mv %{buildroot}%{vdir}/etc/*_deps %{buildroot}%{_sysconfdir}/%{name}/.
+%{__mkdir_p} %{buildroot}%{_sysconfdir}/%{name} \
+             %{buildroot}%{_includedir}/%{name} \
+             %{buildroot}%{_libdir}/%{name}
+%{__mv} %{buildroot}%{vdir}/etc/*_deps %{buildroot}%{_sysconfdir}/%{name}/.
 
 # shubes 11/18/2013 - This is a hack.
 # TODO: Need to get proper object library handling implemented for vpopmail
@@ -140,15 +141,15 @@ mv %{buildroot}%{vdir}/etc/*_deps %{buildroot}%{_sysconfdir}/%{name}/.
   sed -i 's|/usr/lib/|/usr/lib64/|' %{buildroot}%{_sysconfdir}/%{name}/lib_deps
 %endif
 
-mv %{buildroot}%{vdir}/include/*  %{buildroot}%{_includedir}/%{name}/.
-mv %{buildroot}%{vdir}/lib/*      %{buildroot}%{_libdir}/%{name}/.
+%{__mv} %{buildroot}%{vdir}/include/*  %{buildroot}%{_includedir}/%{name}/.
+%{__mv} %{buildroot}%{vdir}/lib/*      %{buildroot}%{_libdir}/%{name}/.
 rmdir %{buildroot}%{vdir}/include \
       %{buildroot}%{vdir}/lib
 
 #-------------------------------------------------------------------------------
 %clean
 #-------------------------------------------------------------------------------
-rm -rf %{buildroot}
+%{__rm} -rf %{buildroot}
 
 #-------------------------------------------------------------------------------
 %pre
