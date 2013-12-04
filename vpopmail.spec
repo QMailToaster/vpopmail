@@ -10,6 +10,7 @@ Source1:	vpopmail.mysql
 Patch0:		vpopmail-toaster-5.4.33.patch
 Patch1:		vpopmail-build-no-root-5.4.33.patch
 Patch2:		vpopmail-build-no-qmail-5.4.33.patch
+Patch3:		vpopmail-build-devel-5.4.33.patch
 BuildRequires:	automake
 BuildRequires:	mysql-devel >= 5.0.22
 Requires:	mysql >= 5.0.22
@@ -83,6 +84,7 @@ Headers and libs for building packages which use vpopmail.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 #-------------------------------------------------------------------------------
 %build
