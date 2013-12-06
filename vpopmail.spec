@@ -7,6 +7,7 @@ Group:		Networking/Other
 URL:		http://www.inter7.com/%{name}
 Source0:	http://downloads.sourceforge.net/project/vpopmail/vpopmail-stable/5.4.33/%{name}-%{version}.tar.gz
 Source1:	vpopmail.mysql
+Source2:	vpopmail-secure-create-mysql
 Patch0:		vpopmail-toaster-5.4.33.patch
 Patch1:		vpopmail-build-no-root-5.4.33.patch
 Patch2:		vpopmail-build-no-qmail-5.4.33.patch
@@ -124,7 +125,9 @@ make DESTDIR=%{buildroot} install-strip
 #-------------------------------------------------------------------------------
 %{__mv} %{buildroot}%{vdir}/etc/vpopmail.mysql \
         %{buildroot}%{vdir}/etc/vpopmail.mysql.dist
-%{__install} -p %{_sourcedir}/vpopmail.mysql %{buildroot}%{vdir}/etc/.
+%{__install} -p %{_sourcedir}/vpopmail.mysql %{buildroot}%{vdir}/etc/
+%{__install} -p %{_sourcedir}/vpopmail-secure-create-mysql \
+                                             %{buildroot}%{vdir}/bin/
 
 # Install domain quota messages
 #-------------------------------------------------------------------------------
@@ -169,7 +172,7 @@ fi
 #-------------------------------------------------------------------------------
 %preun
 #-------------------------------------------------------------------------------
-if [ "$1" = 0 ]; then
+if [ "$1" = "0" ]; then
   userdel vpopmail 2> /dev/null
   groupdel vchkpw 2> /dev/null
 fi
@@ -177,6 +180,10 @@ fi
 #-------------------------------------------------------------------------------
 %post
 #-------------------------------------------------------------------------------
+
+if [ "$1" = "1" ]; then
+  %{vdir}/bin/vpopmail-secure-create-mysql
+fi
 
 #-------------------------------------------------------------------------------
 %files
@@ -217,6 +224,8 @@ fi
 #-------------------------------------------------------------------------------
 %changelog
 #-------------------------------------------------------------------------------
+* Thu Dev 06 2013 Eric Shubert <eric@datamatters.us> 5.4.33-0.qt
+- Added script to secure and initialize mysql database
 * Fri Nov 15 2013 Eric Shubert <eric@datamatters.us> 5.4.33-0.qt
 - Migrated to github
 - Removed -toaster designation
