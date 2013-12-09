@@ -224,7 +224,7 @@ fi
 #-------------------------------------------------------------------------------
 %changelog
 #-------------------------------------------------------------------------------
-* Thu Dev 06 2013 Eric Shubert <eric@datamatters.us> 5.4.33-0.qt
+* Thu Dec 06 2013 Eric Shubert <eric@datamatters.us> 5.4.33-0.qt
 - Added script to secure and initialize mysql database
 * Fri Nov 15 2013 Eric Shubert <eric@datamatters.us> 5.4.33-0.qt
 - Migrated to github
