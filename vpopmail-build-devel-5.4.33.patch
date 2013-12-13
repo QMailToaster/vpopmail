@@ -12,3 +12,17 @@
  	 $(DESTDIR)@vpopmaildir@/etc/lib_deps
  
  	if test ! -r $(VUSAGECCONF); then \
+--- vpopmail-5.4.33/vusaged/configure.ac	2011-02-28 10:00:45.000000000 -0700
++++ vpopmail-5.4.33-patched/vusaged/configure.ac	2013-12-13 15:09:24.610000563 -0700
+@@ -379,8 +379,8 @@
+ 
+ if test x"$with_vpopmail" != x""
+ then
+-   CPPFLAGS="$CFLAGS `cat $with_vpopmail/etc/inc_deps 2> /dev/null`"
+-   LDFLAGS="$LDFLAGS `cat $with_vpopmail/etc/lib_deps 2> /dev/null`"
++   CPPFLAGS="$CFLAGS `cat $with_vpopmail/inc_deps 2> /dev/null`"
++   LDFLAGS="$LDFLAGS `cat $with_vpopmail/lib_deps 2> /dev/null`"
+ fi
+ 
+ AC_CHECK_HEADERS(vpopmail.h)
+
