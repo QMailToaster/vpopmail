@@ -115,11 +115,23 @@ autoreconf
 	--enable-non-root-build
 make
 
+pushd vusaged
+  %{__autoconf}
+  ./configure --with-vpopmail=/etc/vpopmail
+  make
+popd
+
 #-------------------------------------------------------------------------------
 %install
 #-------------------------------------------------------------------------------
 %{__rm} -rf %{buildroot}
 make DESTDIR=%{buildroot} install-strip
+
+# install vusaged
+%{__install} -p  vusaged/vusaged             %{buildroot}%{vdir}/bin/
+%{__install} -p  vusaged/etc/vusaged.conf    %{buildroot}%{vdir}/etc/
+%{__install} -Dp vusaged/contrib/rc.vusaged  %{buildroot}%{_initrddir}/vusaged
+# TODO: vusaged.conf and vusagec.conf might need to be edited
 
 # Set defaults for vpopmail mysql
 #-------------------------------------------------------------------------------
@@ -183,6 +195,9 @@ fi
 
 if [ "$1" = "1" ]; then
   %{vdir}/bin/vpopmail-secure-create-mysql
+# chkconfig --add vusaged
+# chkconfig vusaged on
+# service vusaged start
 fi
 
 #-------------------------------------------------------------------------------
@@ -197,9 +212,11 @@ fi
 #%attr(0755,vpopmail,vchkpw) %dir %{vdir}/lib
 
 %attr(0751,vpopmail,vchkpw) %{vdir}/bin/*
+%attr(0750,vpopmail,vchkpw) %{_initrddir}/vusaged
 %attr(0644,vpopmail,vchkpw) %{vdir}/domains/.quotawarn.msg
 #%attr(0644,vpopmail,vchkpw) %{vdir}/domains/.overquota.msg
 %attr(0644,vpopmail,vchkpw) %{vdir}/etc/vusagec.conf
+%attr(0644,vpopmail,vchkpw) %{vdir}/etc/vusaged.conf
 %attr(0644,vpopmail,vchkpw) %config(noreplace) %{vdir}/etc/vlimits.default
 %attr(0644,vpopmail,vchkpw) %config(noreplace) %{vdir}/etc/vpopmail.mysql
 %attr(0644,vpopmail,vchkpw) %{vdir}/etc/vpopmail.mysql.dist
