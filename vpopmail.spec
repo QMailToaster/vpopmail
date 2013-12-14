@@ -76,6 +76,8 @@ one domain per SQL table = --disable-many-domains
 %package -n %{name}-devel
 Summary:	vpopmail development headers and libs
 Group:		System/Servers
+Provides:	vpopmail-static
+
 %description -n %{name}-devel
 Headers and libs for building packages which use vpopmail.
 
@@ -153,21 +155,25 @@ make DESTDIR=%{buildroot} install-strip
 rmdir %{buildroot}%{vdir}/include \
       %{buildroot}%{vdir}/lib
 
+# we can't do this here, because %{buildroot} ends up in the vusaged bin file.
+# vusaged needs to be built after vpopmail-devel is installed.
+# There should be a spec and packages for libvpopmail/-devel
+
 # build and install vusaged now that vpopmail is installed
-pushd vusaged
-  export VPOP_CFLAGS="`sed -e \"s|-I/usr|-I%{buildroot}/usr|\" \
-                %{buildroot}%{_sysconfdir}/%{name}/inc_deps`"
-  export VPOP_LFLAGS="`sed -e \"s|-L/usr|-L%{buildroot}/usr|\" \
-                %{buildroot}%{_sysconfdir}/%{name}/lib_deps`"
-  %{__autoconf}
-  ./configure --with-vpopmail=%{buildroot}%{_sysconfdir}/%{name}
-  make
-popd
+#pushd vusaged
+#  export VPOP_CFLAGS="`sed -e \"s|-I/usr|-I%{buildroot}/usr|\" \
+#                %{buildroot}%{_sysconfdir}/%{name}/inc_deps`"
+#  export VPOP_LFLAGS="`sed -e \"s|-L/usr|-L%{buildroot}/usr|\" \
+#                %{buildroot}%{_sysconfdir}/%{name}/lib_deps`"
+#  %{__autoconf}
+#  ./configure --with-vpopmail=%{buildroot}%{_sysconfdir}/%{name}
+#  make
+#popd
 
 # install vusaged
-%{__install} -p  vusaged/vusaged             %{buildroot}%{vdir}/bin/
-%{__install} -p  vusaged/etc/vusaged.conf    %{buildroot}%{vdir}/etc/
-%{__install} -Dp vusaged/contrib/rc.vusaged  %{buildroot}%{_initrddir}/vusaged
+#%{__install} -p  vusaged/vusaged             %{buildroot}%{vdir}/bin/
+#%{__install} -p  vusaged/etc/vusaged.conf    %{buildroot}%{vdir}/etc/
+#%{__install} -Dp vusaged/contrib/rc.vusaged  %{buildroot}%{_initrddir}/vusaged
 # TODO: vusaged.conf and vusagec.conf might need to be edited
 
 #-------------------------------------------------------------------------------
@@ -223,7 +229,7 @@ fi
 %attr(0644,vpopmail,vchkpw) %{vdir}/domains/.quotawarn.msg
 #%attr(0644,vpopmail,vchkpw) %{vdir}/domains/.overquota.msg
 %attr(0644,vpopmail,vchkpw) %{vdir}/etc/vusagec.conf
-%attr(0644,vpopmail,vchkpw) %{vdir}/etc/vusaged.conf
+#%attr(0644,vpopmail,vchkpw) %{vdir}/etc/vusaged.conf
 %attr(0644,vpopmail,vchkpw) %config(noreplace) %{vdir}/etc/vlimits.default
 %attr(0644,vpopmail,vchkpw) %config(noreplace) %{vdir}/etc/vpopmail.mysql
 %attr(0644,vpopmail,vchkpw) %{vdir}/etc/vpopmail.mysql.dist
