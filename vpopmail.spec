@@ -155,9 +155,9 @@ rmdir %{buildroot}%{vdir}/include \
 
 # build and install vusaged now that vpopmail is installed
 pushd vusaged
-  VPOP_CFLAGS="`sed -e \"s|-I/usr|-I%{buildroot}/usr|\" \
+  export VPOP_CFLAGS="`sed -e \"s|-I/usr|-I%{buildroot}/usr|\" \
                 %{buildroot}%{_sysconfdir}/%{name}/inc_deps`"
-  VPOP_LFLAGS="`sed -e \"s|-L/usr|-L%{buildroot}/usr|\" \
+  export VPOP_LFLAGS="`sed -e \"s|-L/usr|-L%{buildroot}/usr|\" \
                 %{buildroot}%{_sysconfdir}/%{name}/lib_deps`"
   %{__autoconf}
   ./configure --with-vpopmail=%{buildroot}%{_sysconfdir}/%{name}
