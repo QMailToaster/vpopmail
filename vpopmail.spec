@@ -165,10 +165,9 @@ pushd vusaged
 popd
 
 # install vusaged
-%{__mkdir_p} %{buildroot}%{_initrddir}
-%{__install} -p  vusaged/contrib/rc.vusaged  %{buildroot}%{_initrddir}/vusaged
 %{__install} -p  vusaged/vusaged             %{buildroot}%{vdir}/bin/
 %{__install} -p  vusaged/etc/vusaged.conf    %{buildroot}%{vdir}/etc/
+%{__install} -Dp vusaged/contrib/rc.vusaged  %{buildroot}%{_initrddir}/vusaged
 # TODO: vusaged.conf and vusagec.conf might need to be edited
 
 #-------------------------------------------------------------------------------
