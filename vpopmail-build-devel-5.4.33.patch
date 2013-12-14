@@ -20,8 +20,8 @@
  then
 -   CPPFLAGS="$CFLAGS `cat $with_vpopmail/etc/inc_deps 2> /dev/null`"
 -   LDFLAGS="$LDFLAGS `cat $with_vpopmail/etc/lib_deps 2> /dev/null`"
-+   CPPFLAGS="$CFLAGS `cat $with_vpopmail/inc_deps 2> /dev/null`"
-+   LDFLAGS="$LDFLAGS `cat $with_vpopmail/lib_deps 2> /dev/null`"
++   CPPFLAGS="$CFLAGS $VPOP_CFLAGS"
++   LDFLAGS="$LDFLAGS $VPOP_LFLAGS"
  fi
  
  AC_CHECK_HEADERS(vpopmail.h)

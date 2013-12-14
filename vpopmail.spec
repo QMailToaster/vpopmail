@@ -13,7 +13,9 @@ Patch1:		vpopmail-build-no-root-5.4.33.patch
 Patch2:		vpopmail-build-no-qmail-5.4.33.patch
 Patch3:		vpopmail-build-devel-5.4.33.patch
 BuildRequires:	automake
+BuildRequires:	libev-devel
 BuildRequires:	mysql-devel >= 5.0.22
+Requires:	libev
 Requires:	mysql >= 5.0.22
 Obsoletes:	vpopmail-toaster
 Obsoletes:	vpopmail-toaster-doc
@@ -115,23 +117,11 @@ autoreconf
 	--enable-non-root-build
 make
 
-pushd vusaged
-  %{__autoconf}
-  ./configure --with-vpopmail=/etc/vpopmail
-  make
-popd
-
 #-------------------------------------------------------------------------------
 %install
 #-------------------------------------------------------------------------------
 %{__rm} -rf %{buildroot}
 make DESTDIR=%{buildroot} install-strip
-
-# install vusaged
-%{__install} -p  vusaged/vusaged             %{buildroot}%{vdir}/bin/
-%{__install} -p  vusaged/etc/vusaged.conf    %{buildroot}%{vdir}/etc/
-%{__install} -Dp vusaged/contrib/rc.vusaged  %{buildroot}%{_initrddir}/vusaged
-# TODO: vusaged.conf and vusagec.conf might need to be edited
 
 # Set defaults for vpopmail mysql
 #-------------------------------------------------------------------------------
@@ -162,6 +152,23 @@ make DESTDIR=%{buildroot} install-strip
 %{__mv} %{buildroot}%{vdir}/lib/*      %{buildroot}%{_libdir}/%{name}/.
 rmdir %{buildroot}%{vdir}/include \
       %{buildroot}%{vdir}/lib
+
+# build and install vusaged now that vpopmail is installed
+pushd vusaged
+  VPOP_CFLAGS=$(sed -e "s|-I/usr|-I%{buildroot}/usr|" \
+                %{buildroot}%{_sysconfdir}/%{name}/inc_deps
+  VPOP_LFLAGS=$(sed -e "s|-L/usr|-L%{buildroot}/usr|" \
+                %{buildroot}%{_sysconfdir}/%{name}/lib_deps
+  %{__autoconf}
+  ./configure --with-vpopmail=%{buildroot}%{_sysconfdir}/%{name}
+  make
+popd
+
+# install vusaged
+%{__install} -p  vusaged/vusaged             %{buildroot}%{vdir}/bin/
+%{__install} -p  vusaged/etc/vusaged.conf    %{buildroot}%{vdir}/etc/
+%{__install} -Dp vusaged/contrib/rc.vusaged  %{buildroot}%{_initrddir}/vusaged
+# TODO: vusaged.conf and vusagec.conf might need to be edited
 
 #-------------------------------------------------------------------------------
 %clean
