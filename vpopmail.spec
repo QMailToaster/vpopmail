@@ -14,6 +14,7 @@ Patch2:		vpopmail-build-no-qmail-5.4.33.patch
 Patch3:		vpopmail-build-devel-5.4.33.patch
 BuildRequires:	automake
 BuildRequires:	libev-devel
+BuildRequires:  libvpopmail-devel
 BuildRequires:	mysql-devel >= 5.0.22
 Requires:	libev
 Requires:	mysql >= 5.0.22
@@ -23,7 +24,7 @@ Conflicts:      set-toaster, checkpassword
 BuildRoot:      %{_topdir}/BUILDROOT/%{name}-%{version}-%{release}.%{_arch}
 
 %define debug_package %{nil}
-%define vdir          /home/vpopmail
+%define vdir    /home/vpopmail
 
 #-------------------------------------------------------------------------------
 %description
@@ -73,14 +74,6 @@ address extensions = ON  --enable-qmail-ext
       auth logging = ON  --enable-auth-logging (default)
 one domain per SQL table = --disable-many-domains
 
-%package -n %{name}-devel
-Summary:	vpopmail development headers and libs
-Group:		System/Servers
-Provides:	vpopmail-static
-
-%description -n %{name}-devel
-Headers and libs for building packages which use vpopmail.
-
 #-------------------------------------------------------------------------------
 %prep
 #-------------------------------------------------------------------------------
@@ -119,6 +112,12 @@ autoreconf
 	--enable-non-root-build
 make
 
+pushd vusaged
+  %{__autoconf}
+  ./configure --with-vpopmail=%{_sysconfdir}/libvpopmail
+  make
+popd
+
 #-------------------------------------------------------------------------------
 %install
 #-------------------------------------------------------------------------------
@@ -138,42 +137,17 @@ make DESTDIR=%{buildroot} install-strip
 # install overquota.msg  %{buildroot}%{vdir}/domains
 %{__install} quotawarn.msg %{buildroot}%{vdir}/domains/.quotawarn.msg
 
-# move devel files to their normal places for the -devel package
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/%{name} \
-             %{buildroot}%{_includedir}/%{name} \
-             %{buildroot}%{_libdir}/%{name}
-%{__mv} %{buildroot}%{vdir}/etc/*_deps %{buildroot}%{_sysconfdir}/%{name}/.
+# Remove devel files since they're in libvpopmail-devel now
+#-------------------------------------------------------------------------------
+%{__rm} %{buildroot}%{vdir}/etc/*_deps
+rm -rf  %{buildroot}%{vdir}/include \
+        %{buildroot}%{vdir}/lib
 
-# shubes 11/18/2013 - This is a hack.
-# TODO: Need to get proper object library handling implemented for vpopmail
-%ifarch x86_64
-  sed -i 's|/usr/lib/|/usr/lib64/|' %{buildroot}%{_sysconfdir}/%{name}/lib_deps
-%endif
-
-%{__mv} %{buildroot}%{vdir}/include/*  %{buildroot}%{_includedir}/%{name}/.
-%{__mv} %{buildroot}%{vdir}/lib/*      %{buildroot}%{_libdir}/%{name}/.
-rmdir %{buildroot}%{vdir}/include \
-      %{buildroot}%{vdir}/lib
-
-# we can't do this here, because %{buildroot} ends up in the vusaged bin file.
-# vusaged needs to be built after vpopmail-devel is installed.
-# There should be a spec and packages for libvpopmail/-devel
-
-# build and install vusaged now that vpopmail is installed
-#pushd vusaged
-#  export VPOP_CFLAGS="`sed -e \"s|-I/usr|-I%{buildroot}/usr|\" \
-#                %{buildroot}%{_sysconfdir}/%{name}/inc_deps`"
-#  export VPOP_LFLAGS="`sed -e \"s|-L/usr|-L%{buildroot}/usr|\" \
-#                %{buildroot}%{_sysconfdir}/%{name}/lib_deps`"
-#  %{__autoconf}
-#  ./configure --with-vpopmail=%{buildroot}%{_sysconfdir}/%{name}
-#  make
-#popd
-
-# install vusaged
-#%{__install} -p  vusaged/vusaged             %{buildroot}%{vdir}/bin/
-#%{__install} -p  vusaged/etc/vusaged.conf    %{buildroot}%{vdir}/etc/
-#%{__install} -Dp vusaged/contrib/rc.vusaged  %{buildroot}%{_initrddir}/vusaged
+# Install vusaged
+#-------------------------------------------------------------------------------
+%{__install} -p  vusaged/vusaged             %{buildroot}%{vdir}/bin/
+%{__install} -p  vusaged/etc/vusaged.conf    %{buildroot}%{vdir}/etc/
+%{__install} -Dp vusaged/contrib/rc.vusaged  %{buildroot}%{_initrddir}/vusaged
 # TODO: vusaged.conf and vusagec.conf might need to be edited
 
 #-------------------------------------------------------------------------------
@@ -221,15 +195,13 @@ fi
 %attr(0755,vpopmail,vchkpw) %dir %{vdir}/bin
 %attr(0755,vpopmail,vchkpw) %dir %{vdir}/etc
 %attr(0700,vpopmail,vchkpw) %dir %{vdir}/domains
-#%attr(0755,vpopmail,vchkpw) %dir %{vdir}/include
-#%attr(0755,vpopmail,vchkpw) %dir %{vdir}/lib
 
 %attr(0751,vpopmail,vchkpw) %{vdir}/bin/*
 %attr(0750,vpopmail,vchkpw) %{_initrddir}/vusaged
 %attr(0644,vpopmail,vchkpw) %{vdir}/domains/.quotawarn.msg
 #%attr(0644,vpopmail,vchkpw) %{vdir}/domains/.overquota.msg
 %attr(0644,vpopmail,vchkpw) %{vdir}/etc/vusagec.conf
-#%attr(0644,vpopmail,vchkpw) %{vdir}/etc/vusaged.conf
+%attr(0644,vpopmail,vchkpw) %{vdir}/etc/vusaged.conf
 %attr(0644,vpopmail,vchkpw) %config(noreplace) %{vdir}/etc/vlimits.default
 %attr(0644,vpopmail,vchkpw) %config(noreplace) %{vdir}/etc/vpopmail.mysql
 %attr(0644,vpopmail,vchkpw) %{vdir}/etc/vpopmail.mysql.dist
@@ -241,19 +213,10 @@ fi
 %attr(0444,vpopmail,vchkpw) %{vdir}/doc/man_html/*
 
 #-------------------------------------------------------------------------------
-%files -n %{name}-devel
-#-------------------------------------------------------------------------------
-%defattr (-,root,root)
-%attr(0755,root,root) %dir %{_sysconfdir}/%{name}
-%attr(0755,root,root) %dir %{_includedir}/%{name}
-%attr(0755,root,root) %dir %{_libdir}/%{name}
-%attr(0644,root,root)      %{_sysconfdir}/%{name}/*_deps
-%attr(0644,root,root)      %{_includedir}/%{name}/*
-%attr(0644,root,root)      %{_libdir}/%{name}/*
-
-#-------------------------------------------------------------------------------
 %changelog
 #-------------------------------------------------------------------------------
+* Sun Dec 15 2013 Eric Shubert <eric@datamatters.us> 5.4.33-0.qt
+- Split out libvpopmail package. This still needs more work to be clean.
 * Thu Dec 06 2013 Eric Shubert <eric@datamatters.us> 5.4.33-0.qt
 - Added script to secure and initialize mysql database
 * Fri Nov 15 2013 Eric Shubert <eric@datamatters.us> 5.4.33-0.qt
