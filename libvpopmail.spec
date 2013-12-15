@@ -151,4 +151,4 @@ rmdir -rf %{buildroot}%{vdir}
 %changelog
 #-------------------------------------------------------------------------------
 * Sat Dec 14 2013 Eric Shubert <eric@datamatters.us> 5.4.33-0.qt
-- Created initial libvpopmail-devel package
+- Created initial libvpopmail-devel package 
