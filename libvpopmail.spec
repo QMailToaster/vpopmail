@@ -17,6 +17,9 @@ BuildRoot:      %{_topdir}/BUILDROOT/%{name}-%{version}-%{release}.%{_arch}
 %define debug_package %{nil}
 %define vdir          /home/vpopmail
 
+%description
+Headers and libs for building packages which use vpopmail.
+
 #-------------------------------------------------------------------------------
 %package -n %{name}-devel
 #-------------------------------------------------------------------------------
