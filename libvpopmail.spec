@@ -5,7 +5,7 @@ Release:	0%{?dist}
 License:	GPL
 Group:		Networking/Other
 URL:		http://www.inter7.com/%{name}
-Source0:	http://downloads.sourceforge.net/project/vpopmail/vpopmail-stable/5.4.33/%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/project/vpopmail/vpopmail-stable/5.4.33/vpopmail-%{version}.tar.gz
 #Source1:	vpopmail.mysql
 #Source2:	vpopmail-secure-create-mysql
 Patch0:		vpopmail-toaster-5.4.33.patch
@@ -35,9 +35,9 @@ Requires:	mysql >= 5.0.22
 Headers and libs for building packages which use vpopmail.
 
 vpopmail has been patched as follows:
-etc/     is in /etc/vpopmail (only devel related files)
-include/ is in /usr/include/vpopmail
-lib/     is in /usr/lib/vpopmail
+etc/     is in /etc/libvpopmail (only devel related files)
+include/ is in /usr/include/libvpopmail
+lib/     is in /usr/lib/libvpopmail
  
            libvpopmail 5.4.33
             Current settings
@@ -113,7 +113,7 @@ make libvpopmail.a
 %{__rm} -rf %{buildroot}
 make install-data-local
 
-# move devel files to their normal places for the -devel package
+# move devel files to their typical places for the -devel package
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/%{name} \
              %{buildroot}%{_includedir}/%{name} \
              %{buildroot}%{_libdir}/%{name}

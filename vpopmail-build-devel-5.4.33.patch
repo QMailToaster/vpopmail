@@ -5,10 +5,10 @@
  	  $(DESTDIR)@vpopmaildir@/@domains_dir@
  
 -	echo "-I@vpopmaildir@/include" > \
-+	echo "-I/usr/include/vpopmail" > \
++	echo "-I/usr/include/libvpopmail" > \
  	 $(DESTDIR)@vpopmaildir@/etc/inc_deps
 -	echo "-L@vpopmaildir@/lib -lvpopmail @auth_libs@ @LIBS@" > \
-+	echo "-L/usr/lib/vpopmail -lvpopmail @auth_libs@ @LIBS@" > \
++	echo "-L/usr/lib/libvpopmail -lvpopmail @auth_libs@ @LIBS@" > \
  	 $(DESTDIR)@vpopmaildir@/etc/lib_deps
  
  	if test ! -r $(VUSAGECCONF); then \
