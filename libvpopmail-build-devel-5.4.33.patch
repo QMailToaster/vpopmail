@@ -1,6 +1,6 @@
 --- vpopmail-5.4.33/Makefile.am	2013-12-04 09:56:27.314000038 -0700
 +++ vpopmail-5.4.33-patched/Makefile.am	2013-12-04 10:00:02.002992199 -0700
-@@ -144,9 +144,9 @@
+@@ -144,10 +144,10 @@
  	$(INSTALL) -d -m 0700 \
  	  $(DESTDIR)@vpopmaildir@/@domains_dir@
  
