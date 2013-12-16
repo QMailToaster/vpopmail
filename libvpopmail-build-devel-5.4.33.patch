@@ -14,3 +14,4 @@
 +	 $(DESTDIR)/etc/libvpopmail/lib_deps
  
  	if test ! -r $(VUSAGECCONF); then \
+ 		$(INSTALL) -m 0644 \
