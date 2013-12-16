@@ -142,7 +142,7 @@ make DESTDIR=%{buildroot} install-data-local
 %{__mv} %{buildroot}%{vdir}/include/*  %{buildroot}%{_includedir}/%{name}/.
 %{__mv} %{buildroot}%{vdir}/lib/*      %{buildroot}%{_libdir}/%{name}/.
 
-rmdir -rf %{buildroot}%{vdir}
+%{__rm} -rf %{buildroot}%{vdir}
 
 #-------------------------------------------------------------------------------
 %clean
