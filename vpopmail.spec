@@ -14,7 +14,7 @@ Patch2:		vpopmail-build-no-qmail-5.4.33.patch
 Patch3:		vpopmail-build-devel-5.4.33.patch
 BuildRequires:	automake
 BuildRequires:	libev-devel
-BuildRequires:  libvpopmail-devel
+BuildRequires:  libvpopmail-static
 BuildRequires:	mysql-devel >= 5.0.22
 Requires:	libev
 Requires:	mysql >= 5.0.22
