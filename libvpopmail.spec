@@ -122,7 +122,7 @@ make libvpopmail.a
 %install
 #-------------------------------------------------------------------------------
 %{__rm} -rf %{buildroot}
-make install-data-local
+make DESTDIR=%{buildroot} install-data-local
 
 # move devel files to their typical places for the -devel package
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/%{name} \
