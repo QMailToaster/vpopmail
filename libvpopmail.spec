@@ -11,7 +11,7 @@ Source0:	http://downloads.sourceforge.net/project/vpopmail/vpopmail-stable/5.4.3
 Patch0:		vpopmail-toaster-5.4.33.patch
 Patch1:		vpopmail-build-no-root-5.4.33.patch
 Patch2:		vpopmail-build-no-qmail-5.4.33.patch
-Patch3:		vpopmail-build-devel-5.4.33.patch
+Patch3:		libvpopmail-build-devel-5.4.33.patch
 BuildRoot:      %{_topdir}/BUILDROOT/%{name}-%{version}-%{release}.%{_arch}
 
 %define debug_package %{nil}
@@ -122,17 +122,19 @@ make libvpopmail.a
 %install
 #-------------------------------------------------------------------------------
 %{__rm} -rf %{buildroot}
-make DESTDIR=%{buildroot} install-data-local
 
-# move devel files to their typical places for the -devel package
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/%{name} \
              %{buildroot}%{_includedir}/%{name} \
-             %{buildroot}%{_libdir}/%{name}
+             %{buildroot}%{_libdir}/%{name} \
+             %{buildroot}%{vdir}/etc \
+             %{buildroot}%{vdir}/include \
+             %{buildroot}%{vdir}/lib \
+             %{buildroot}%{vdir}/doc
 
-%{__mv} %{buildroot}%{vdir}/etc/*_deps %{buildroot}%{_sysconfdir}/%{name}/.
+make DESTDIR=%{buildroot} install-data-local
 
 # shubes 11/18/2013 - This is a hack.
-# TODO: Need to get proper object library handling implemented for vpopmail
+# TODO: Need to get proper object library handling implemented
 %ifarch x86_64
   sed -i 's|/usr/lib/|/usr/lib64/|' %{buildroot}%{_sysconfdir}/%{name}/lib_deps
 %endif
