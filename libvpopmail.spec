@@ -108,6 +108,14 @@ autoreconf
 	--enable-valias \
 	--disable-many-domains \
 	--enable-non-root-build
+
+# this is a hack. I don't know why cdb isn't being built with libvpopmail.a.
+# cdb is from DJB, and should probably be removed at some point. Either that
+# or it should be properly packaged as a library.
+pushd cdb
+  make
+popd
+
 make libvpopmail.a
 
 #-------------------------------------------------------------------------------
