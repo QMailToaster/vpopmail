@@ -128,9 +128,8 @@ make DESTDIR=%{buildroot} install-strip
 #-------------------------------------------------------------------------------
 %{__mv} %{buildroot}%{vdir}/etc/vpopmail.mysql \
         %{buildroot}%{vdir}/etc/vpopmail.mysql.dist
-%{__install} -p %{_sourcedir}/vpopmail.mysql %{buildroot}%{vdir}/etc/
-%{__install} -p %{_sourcedir}/vpopmail-secure-create-mysql \
-                                             %{buildroot}%{vdir}/bin/
+%{__install} -p %{SOURCE1} %{buildroot}%{vdir}/etc/
+%{__install} -p %{SOURCE2} %{buildroot}%{vdir}/bin/
 
 # Install domain quota messages
 #-------------------------------------------------------------------------------
