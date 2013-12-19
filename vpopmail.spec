@@ -17,7 +17,7 @@ BuildRequires:	libev-devel
 BuildRequires:  libvpopmail-static
 BuildRequires:	mysql-devel >= 5.0.22
 Requires:	libev
-Requires:	mysql >= 5.0.22
+Requires:	mysql-server >= 5.0.22
 Obsoletes:	vpopmail-toaster
 Obsoletes:	vpopmail-toaster-doc
 Conflicts:      set-toaster, checkpassword
