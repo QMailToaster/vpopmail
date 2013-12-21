@@ -157,7 +157,27 @@ rm -rf  %{buildroot}%{vdir}/include \
 #-------------------------------------------------------------------------------
 %pre
 #-------------------------------------------------------------------------------
-# Create group and user if they don't exist
+# Remove postfix user and group if they exist
+#-------------------------------------------------------------------------------
+
+rpm -q postfix >/dev/null 2>&1
+rc=$?
+
+if [ "$rc" == "0" ]; then
+  service postfix status >/dev/null 2>&1
+  rc=$?
+  if [ "$rc" == "0" ]; then
+    service postfix stop >/dev/null 2>&1
+  fi
+  chkconfig postfix off >/dev/null 2>&1
+fi
+
+if [ "`/usr/bin/id -u postfix 2>/dev/null`" == "89" ]; then
+  /usr/sbin/userdel postfix
+fi
+ 
+#-------------------------------------------------------------------------------
+# Create group and user for vpopmail if they don't exist
 #-------------------------------------------------------------------------------
 if [ -z "`/usr/bin/id -g vchkpw 2>/dev/null`" ]; then
   /usr/sbin/groupadd -g 89 -r vchkpw 2>&1 || :
@@ -171,8 +191,12 @@ fi
 %preun
 #-------------------------------------------------------------------------------
 if [ "$1" = "0" ]; then
-  userdel vpopmail 2> /dev/null
-  groupdel vchkpw 2> /dev/null
+  if [ ! -z "`/usr/bin/id -u vpopmail 2>/dev/null`" ]; then
+    userdel vpopmail 2> /dev/null
+  fi
+  if [ ! -z "`/usr/bin/id -g vchkpw 2>/dev/null`" ]; then
+    groupdel vchkpw 2> /dev/null
+  fi
 fi
 
 #-------------------------------------------------------------------------------
