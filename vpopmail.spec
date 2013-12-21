@@ -7,7 +7,6 @@ Group:		Networking/Other
 URL:		http://www.inter7.com/%{name}
 Source0:	http://downloads.sourceforge.net/project/vpopmail/vpopmail-stable/5.4.33/%{name}-%{version}.tar.gz
 Source1:	vpopmail.mysql
-Source2:	vpopmail-secure-create-mysql
 Patch0:		vpopmail-toaster-5.4.33.patch
 Patch1:		vpopmail-build-no-root-5.4.33.patch
 Patch2:		vpopmail-build-no-qmail-5.4.33.patch
@@ -129,7 +128,6 @@ make DESTDIR=%{buildroot} install-strip
 %{__mv} %{buildroot}%{vdir}/etc/vpopmail.mysql \
         %{buildroot}%{vdir}/etc/vpopmail.mysql.dist
 %{__install} -p %{SOURCE1} %{buildroot}%{vdir}/etc/
-%{__install} -p %{SOURCE2} %{buildroot}%{vdir}/bin/
 
 # Install domain quota messages
 #-------------------------------------------------------------------------------
@@ -204,8 +202,7 @@ fi
 #-------------------------------------------------------------------------------
 
 if [ "$1" = "1" ]; then
-  %{vdir}/bin/vpopmail-secure-create-mysql
-# chkconfig --add vusaged
+  chkconfig --add vusaged
 # chkconfig vusaged on
 # service vusaged start
 fi
