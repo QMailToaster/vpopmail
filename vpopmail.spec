@@ -1,26 +1,29 @@
-Name:		vpopmail
-Summary:	Vpopmail for QMail Toaster
-Version:	5.4.33
-Release:	0%{?dist}
-License:	GPL
-Group:		Networking/Other
-URL:		http://www.inter7.com/%{name}
-Source0:	http://downloads.sourceforge.net/project/vpopmail/vpopmail-stable/5.4.33/%{name}-%{version}.tar.gz
-Source1:	vpopmail.mysql
-Patch0:		vpopmail-toaster-5.4.33.patch
-Patch1:		vpopmail-build-no-root-5.4.33.patch
-Patch2:		vpopmail-build-no-qmail-5.4.33.patch
-Patch3:		vpopmail-build-devel-5.4.33.patch
-BuildRequires:	automake
-BuildRequires:	libev-devel
-BuildRequires:  libvpopmail-static
-BuildRequires:	mysql-devel >= 5.0.22
-Requires:	libev
-Requires:	mysql-server >= 5.0.22
-Obsoletes:	vpopmail-toaster
-Obsoletes:	vpopmail-toaster-doc
-Conflicts:      set-toaster, checkpassword
-BuildRoot:      %{_topdir}/BUILDROOT/%{name}-%{version}-%{release}.%{_arch}
+Name:      vpopmail
+Summary:   Vpopmail for QMail Toaster
+Version:   5.4.33
+Release:   0%{?dist}
+License:   GPL
+Group:     Networking/Other
+Vendor:    QmailToaster
+Packager:  Eric Shubert <qmt-build@datamatters.us>
+URL:       http://www.inter7.com/%{name}
+Source0:   http://downloads.sourceforge.net/project/vpopmail/vpopmail-stable/5.4.33/%{name}-%{version}.tar.gz
+Source1:   vpopmail.mysql
+Patch0:    vpopmail-toaster-5.4.33.patch
+Patch1:    vpopmail-build-no-root-5.4.33.patch
+Patch2:    vpopmail-build-no-qmail-5.4.33.patch
+Patch3:    vpopmail-build-devel-5.4.33.patch
+BuildRequires: automake
+BuildRequires: libev-devel
+BuildRequires: libvpopmail-static
+BuildRequires: mysql-devel >= 5.0.22
+Requires:  libev
+Requires:  mysql-server >= 5.0.22
+Obsoletes: vpopmail-toaster
+Obsoletes: vpopmail-toaster-doc
+Conflicts: set-toaster
+Conflicts: checkpassword
+BuildRoot: %{_topdir}/BUILDROOT/%{name}-%{version}-%{release}.%{_arch}
 
 %define debug_package %{nil}
 %define vdir    /home/vpopmail
